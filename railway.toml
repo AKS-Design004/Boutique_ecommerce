@@ -2,6 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "chmod +x simple-start.sh && ./simple-start.sh"
+startCommand = "chmod +x prepare.sh && ./prepare.sh && php artisan serve --host=0.0.0.0 --port=$PORT"
 healthcheckPath = "/"
 healthcheckTimeout = 300
