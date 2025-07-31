@@ -3,5 +3,5 @@ builder = "nixpacks"
 
 [deploy]
 startCommand = "chmod +x final-start.sh && ./final-start.sh"
-healthcheckPath = "/"
+healthcheckPath = "/test.php"
 healthcheckTimeout = 300
