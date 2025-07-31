@@ -2,26 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+startCommand = "chmod +x start.sh && ./start.sh"
 healthcheckPath = "/"
 healthcheckTimeout = 300
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10
-
-[phases.setup]
-nixPkgs = ["php81", "php81Packages.composer", "postgresql"]
-
-[phases.install]
-cmds = [
-    "chmod +x install.sh",
-    "./install.sh"
-]
-
-[phases.build]
-cmds = [
-    "php artisan key:generate",
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache",
-    "php artisan optimize"
-]
