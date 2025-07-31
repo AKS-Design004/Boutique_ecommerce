@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php81", "php81Packages.composer", "postgresql"]
+nixPkgs = ["php81", "php81Packages.composer", "postgresql", "nodejs", "npm"]
 
 [phases.install]
 cmds = [

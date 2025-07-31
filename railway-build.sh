@@ -50,15 +50,24 @@ MAIL_FROM_NAME="${APP_NAME}"
 EOF
 
 # Installation de Composer
+echo "📦 Installation des dépendances PHP..."
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
+# Installation des dépendances npm
+echo "📦 Installation des dépendances Node.js..."
+npm install
+npm run prod
+
 # Générer la clé
+echo "🔑 Génération de la clé d'application..."
 php artisan key:generate
 
 # Migrations
+echo "🗄️ Exécution des migrations..."
 php artisan migrate --force
 
 # Cache
+echo "⚡ Optimisation du cache..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
