@@ -53,10 +53,20 @@ EOF
 echo "📦 Installation des dépendances PHP..."
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
-# Installation des dépendances npm
-echo "📦 Installation des dépendances Node.js..."
-npm install
-npm run prod
+# Vérifier si npm est disponible et compiler les assets
+if command -v npm &> /dev/null; then
+    echo "📦 Installation des dépendances Node.js..."
+    npm install
+    npm run prod
+else
+    echo "⚠️ npm non disponible, utilisation des assets pré-compilés..."
+    # Copier les assets pré-compilés si ils existent
+    if [ -d "public/mix-manifest.json" ]; then
+        echo "✅ Assets pré-compilés trouvés"
+    else
+        echo "⚠️ Aucun asset pré-compilé trouvé"
+    fi
+fi
 
 # Générer la clé
 echo "🔑 Génération de la clé d'application..."
