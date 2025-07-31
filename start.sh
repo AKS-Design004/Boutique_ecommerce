@@ -20,7 +20,7 @@ if [ ! -f .env ]; then
 APP_NAME=BaabelShop
 APP_ENV=production
 APP_KEY=
-APP_DEBUG=false
+APP_DEBUG=true
 APP_URL=http://localhost
 
 LOG_CHANNEL=stack
@@ -84,6 +84,13 @@ if ! grep -q "APP_KEY=base64:" .env; then
     echo "🔑 Génération de la clé d'application..."
     php artisan key:generate
 fi
+
+# Nettoyer le cache pour éviter les conflits
+echo "🧹 Nettoyage du cache..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
 
 # Cache des configurations
 echo "⚡ Optimisation du cache..."
