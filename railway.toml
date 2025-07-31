@@ -12,7 +12,11 @@ restartPolicyMaxRetries = 10
 nixPkgs = ["php81", "php81Packages.composer", "postgresql"]
 
 [phases.install]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = [
+    "chmod +x railway-setup.sh",
+    "./railway-setup.sh",
+    "composer install --no-dev --optimize-autoloader"
+]
 
 [phases.build]
 cmds = [
@@ -21,4 +25,4 @@ cmds = [
     "php artisan route:cache",
     "php artisan view:cache",
     "php artisan optimize"
-] 
+]
