@@ -13,9 +13,8 @@ nixPkgs = ["php81", "php81Packages.composer", "postgresql"]
 
 [phases.install]
 cmds = [
-    "chmod +x railway-setup.sh",
-    "./railway-setup.sh",
-    "composer install --no-dev --optimize-autoloader"
+    "chmod +x install.sh",
+    "./install.sh"
 ]
 
 [phases.build]
