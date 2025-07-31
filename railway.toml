@@ -2,6 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "chmod +x build-complete.sh && ./build-complete.sh && vendor/bin/heroku-php-apache2 public/"
+startCommand = "chmod +x final-start.sh && ./final-start.sh"
 healthcheckPath = "/"
 healthcheckTimeout = 300
