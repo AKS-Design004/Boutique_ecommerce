@@ -40,5 +40,5 @@ php artisan migrate --force
 
 echo "✅ Configuration terminée, démarrage du serveur..."
 
-# Démarrer Apache avec PHP
-exec vendor/bin/heroku-php-apache2 public/ 
+# Démarrer avec php artisan serve (plus simple pour Railway)
+exec php artisan serve --host=0.0.0.0 --port=$PORT 
