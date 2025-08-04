@@ -74,4 +74,4 @@ class ShopController extends Controller
         Auth::user()->favorites()->where('product_id', $product->id)->delete();
         return back();
     }
-} 
+}

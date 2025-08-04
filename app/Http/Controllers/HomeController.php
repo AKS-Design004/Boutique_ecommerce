@@ -44,4 +44,4 @@ class HomeController extends Controller
 
         return view('welcome', compact('featuredProducts'));
     }
-} 
+}
