@@ -12,9 +12,12 @@
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
-    <body>
-        <div class="font-sans text-gray-900 antialiased">
+    <body class="font-sans text-gray-900 antialiased min-h-screen flex flex-col">
+        <div class="flex-1">
             @yield('content')
         </div>
+        
+        <!-- Footer -->
+        @include('components.footer')
     </body>
 </html>

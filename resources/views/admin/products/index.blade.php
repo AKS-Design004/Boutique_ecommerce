@@ -218,5 +218,3 @@
         </div>
     </div>
 @endsection
-< ! - -   I n t e r f a c e   d e   g e s t i o n   d e s   p r o d u i t s   - - >  
- 
