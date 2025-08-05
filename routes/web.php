@@ -67,6 +67,10 @@ Route::middleware('auth')->prefix('client')->name('client.')->group(function () 
     Route::put('/profile', [App\Http\Controllers\ClientController::class, 'updateProfile'])->name('profile.update');
 });
 
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok'], 200);
+});
+
 // Redirection dashboard selon le rôle
 Route::get('/dashboard', function () {
     if (auth()->user()->is_admin) {
