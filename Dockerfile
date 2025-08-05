@@ -37,6 +37,9 @@ RUN mkdir -p storage/framework/cache \
 # Définir les permissions
 RUN chmod -R 775 storage bootstrap/cache
 
+# Créer le fichier .env depuis .env.example
+RUN cp .env.example .env
+
 # Générer la clé d'application
 RUN php artisan key:generate --force
 
