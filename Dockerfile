@@ -4,8 +4,8 @@ FROM php:8.2-apache
 
 # Installer les dépendances système nécessaires et extensions PHP
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl \
-    && docker-php-ext-install pdo_mysql zip \
+    libpq-dev libzip-dev zip unzip git curl \
+    && docker-php-ext-install pdo_pgsql pgsql zip \
     && a2enmod rewrite
 
 # Installer Composer globalement
@@ -44,6 +44,10 @@ RUN php artisan config:cache \
 # Donner les bonnes permissions aux dossiers nécessaires pour Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
+
+# Configurer Apache pour servir le dossier public
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
 # Exposer le port 80 (Apache)
 EXPOSE 80
