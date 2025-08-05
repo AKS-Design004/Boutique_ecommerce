@@ -1,0 +1,52 @@
+FROM php:8.2-cli
+
+# Installer les dépendances système
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Installer Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY composer.json composer.lock ./
+
+# Installer les dépendances PHP
+RUN composer install --no-dev --optimize-autoloader
+
+# Copier le reste du code
+COPY . .
+
+# Créer les dossiers nécessaires
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
+# Définir les permissions
+RUN chmod -R 775 storage bootstrap/cache
+
+# Générer la clé d'application
+RUN php artisan key:generate --force
+
+# Optimiser Laravel
+RUN php artisan config:cache \
+    php artisan route:cache \
+    php artisan view:cache
+
+# Exposer le port
+EXPOSE 8000
+
+# Commande de démarrage
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"] 
