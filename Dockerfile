@@ -1,56 +1,36 @@
-# Dockerfile pour Laravel avec PHP 8.2 + Apache + Composer
-
 FROM php:8.2-apache
 
-# Installer les dépendances système nécessaires et extensions PHP
+# Installer extensions PHP nécessaires pour PostgreSQL
 RUN apt-get update && apt-get install -y \
-    libpq-dev libzip-dev zip unzip git curl \
-    && docker-php-ext-install pdo_pgsql pgsql zip \
+    libpq-dev zip unzip git curl \
+    && docker-php-ext-install pdo_pgsql pgsql \
     && a2enmod rewrite
 
-# Installer Composer globalement
+# Installer Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Définir le répertoire de travail
+# Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier uniquement les fichiers composer pour optimiser le cache Docker
+# Copier composer.* et installer les dépendances Laravel en prod
 COPY composer.json composer.lock ./
-
-# Installer les dépendances PHP sans les packages de développement
 RUN composer install --no-dev --optimize-autoloader
 
-# Copier tout le reste du projet
+# Copier tout le reste du code
 COPY . .
 
-# Créer les dossiers nécessaires pour Laravel
-RUN mkdir -p storage/framework/cache \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/logs \
-    bootstrap/cache
+# Donner les bonnes permissions à Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Créer le fichier .env depuis .env.example
-RUN cp .env.example .env
-
-# Générer la clé d'application
-RUN php artisan key:generate --force
-
-# Optimiser Laravel
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
-
-# Donner les bonnes permissions aux dossiers nécessaires pour Laravel
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
-# Configurer Apache pour servir le dossier public
+# Changer DocumentRoot Apache vers le dossier "public"
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Exposer le port 80 (Apache)
+# HEALTHCHECK : Vérifie si Laravel répond sur /
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 CMD curl -f http://localhost/ || exit 1
+
+# Exposer le port HTTP
 EXPOSE 80
 
-# Démarrer Apache en mode foreground
+# Lancer Apache
 CMD ["apache2-foreground"]
